@@ -1,7 +1,6 @@
 package gift.auth;
 
 import gift.member.Member;
-import gift.member.MemberRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,26 +17,23 @@ import org.springframework.web.util.UriComponentsBuilder;
  *    retrieves user info, auto-registers the member if new, and issues a service JWT
  */
 @RestController
-@RequestMapping(path = "/api/auth/kakao")
+@RequestMapping("/api/auth/kakao")
 public class KakaoAuthController {
     private final KakaoLoginProperties properties;
-    private final KakaoLoginClient kakaoLoginClient;
-    private final MemberRepository memberRepository;
+    private final KakaoAuthService kakaoAuthService;
     private final JwtProvider jwtProvider;
 
     public KakaoAuthController(
         KakaoLoginProperties properties,
-        KakaoLoginClient kakaoLoginClient,
-        MemberRepository memberRepository,
+        KakaoAuthService kakaoAuthService,
         JwtProvider jwtProvider
     ) {
         this.properties = properties;
-        this.kakaoLoginClient = kakaoLoginClient;
-        this.memberRepository = memberRepository;
+        this.kakaoAuthService = kakaoAuthService;
         this.jwtProvider = jwtProvider;
     }
 
-    @GetMapping(path = "/login")
+    @GetMapping("/login")
     public ResponseEntity<Void> login() {
         String kakaoAuthUrl = UriComponentsBuilder.fromUriString("https://kauth.kakao.com/oauth/authorize")
             .queryParam("response_type", "code")
@@ -52,17 +48,9 @@ public class KakaoAuthController {
             .build();
     }
 
-    @GetMapping(path = "/callback")
+    @GetMapping("/callback")
     public ResponseEntity<TokenResponse> callback(@RequestParam("code") String code) {
-        KakaoLoginClient.KakaoTokenResponse kakaoToken = kakaoLoginClient.requestAccessToken(code);
-        KakaoLoginClient.KakaoUserResponse kakaoUser = kakaoLoginClient.requestUserInfo(kakaoToken.accessToken());
-        String email = kakaoUser.email();
-
-        Member member = memberRepository.findByEmail(email)
-            .orElseGet(() -> new Member(email));
-        member.updateKakaoAccessToken(kakaoToken.accessToken());
-        memberRepository.save(member);
-
+        Member member = kakaoAuthService.processCallback(code);
         String token = jwtProvider.createToken(member.getEmail());
         return ResponseEntity.ok(new TokenResponse(token));
     }
