@@ -15,7 +15,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-
 /*
  * Each product must have at least one option at all times.
  * Option names are validated against allowed characters and length constraints.
