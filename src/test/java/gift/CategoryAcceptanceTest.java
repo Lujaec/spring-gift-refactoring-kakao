@@ -7,7 +7,10 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
 
 class CategoryAcceptanceTest extends AcceptanceTestFixture {
 
@@ -21,7 +24,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .get("/api/categories");
 
         // then
@@ -39,7 +42,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .get("/api/categories");
 
         // then
@@ -63,7 +66,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/categories");
 
         // then
@@ -89,7 +92,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/categories");
 
         // then
@@ -109,7 +112,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/categories");
 
         // then
@@ -129,7 +132,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/categories");
 
         // then
@@ -153,7 +156,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .put("/api/categories/" + id);
 
         // then
@@ -178,7 +181,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .put("/api/categories/" + nonExistingId());
 
         // then
@@ -195,7 +198,7 @@ class CategoryAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .delete("/api/categories/" + id);
 
         // then

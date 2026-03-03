@@ -9,7 +9,10 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
 
 class ProductAcceptanceTest extends AcceptanceTestFixture {
 
@@ -26,7 +29,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .param("page", 0)
             .param("size", 10)
-        .when()
+            .when()
             .get("/api/products");
 
         // then
@@ -48,7 +51,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .param("page", 0)
             .param("size", 10)
-        .when()
+            .when()
             .get("/api/products");
 
         // then
@@ -66,7 +69,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .param("page", 0)
             .param("size", 10)
-        .when()
+            .when()
             .get("/api/products");
 
         // then
@@ -86,7 +89,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .get("/api/products/" + productId);
 
         // then
@@ -106,7 +109,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .get("/api/products/" + nonExistingId());
 
         // then
@@ -131,7 +134,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products");
 
         // then
@@ -160,7 +163,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products");
 
         // then
@@ -183,7 +186,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products");
 
         // then
@@ -204,7 +207,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products");
 
         // then
@@ -226,7 +229,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products");
 
         // then
@@ -249,7 +252,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products");
 
         // then
@@ -272,7 +275,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products");
 
         // then
@@ -298,7 +301,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .put("/api/products/" + productId);
 
         // then
@@ -325,7 +328,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .put("/api/products/" + nonExistingId());
 
         // then
@@ -348,7 +351,7 @@ class ProductAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .delete("/api/products/" + productId);
 
         // then

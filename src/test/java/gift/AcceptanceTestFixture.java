@@ -58,9 +58,9 @@ class AcceptanceTestFixture {
         return given()
             .contentType(ContentType.JSON)
             .body(Map.of("name", name, "color", "#000000", "imageUrl", "http://img.test/cat.png"))
-        .when()
+            .when()
             .post("/api/categories")
-        .then()
+            .then()
             .statusCode(201)
             .extract().jsonPath().getLong("id");
     }
@@ -69,9 +69,9 @@ class AcceptanceTestFixture {
         return given()
             .contentType(ContentType.JSON)
             .body(Map.of("name", name, "price", price, "imageUrl", imageUrl, "categoryId", categoryId))
-        .when()
+            .when()
             .post("/api/products")
-        .then()
+            .then()
             .statusCode(201)
             .extract().jsonPath().getLong("id");
     }
@@ -80,9 +80,9 @@ class AcceptanceTestFixture {
         return given()
             .contentType(ContentType.JSON)
             .body(Map.of("name", name, "quantity", quantity))
-        .when()
+            .when()
             .post("/api/products/" + productId + "/options")
-        .then()
+            .then()
             .statusCode(201)
             .extract().jsonPath().getLong("id");
     }
@@ -91,9 +91,9 @@ class AcceptanceTestFixture {
         return given()
             .contentType(ContentType.JSON)
             .body(Map.of("email", email, "password", password))
-        .when()
+            .when()
             .post("/api/members/register")
-        .then()
+            .then()
             .statusCode(201)
             .extract().jsonPath().getString("token");
     }

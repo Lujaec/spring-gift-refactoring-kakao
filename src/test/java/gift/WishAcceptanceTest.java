@@ -7,7 +7,9 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
 
 class WishAcceptanceTest extends AcceptanceTestFixture {
 
@@ -18,9 +20,9 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
             .contentType(ContentType.JSON)
             .header("Authorization", "Bearer " + token)
             .body(Map.of("productId", productId))
-        .when()
+            .when()
             .post("/api/wishes")
-        .then()
+            .then()
             .statusCode(201)
             .extract().jsonPath().getLong("id");
     }
@@ -40,7 +42,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
             .header("Authorization", "Bearer " + token)
             .param("page", 0)
             .param("size", 10)
-        .when()
+            .when()
             .get("/api/wishes");
 
         // then
@@ -61,7 +63,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .param("page", 0)
             .param("size", 10)
-        .when()
+            .when()
             .get("/api/wishes");
 
         // then
@@ -79,7 +81,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
             .header("Authorization", "Bearer " + token)
             .param("page", 0)
             .param("size", 10)
-        .when()
+            .when()
             .get("/api/wishes");
 
         // then
@@ -105,7 +107,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
             .contentType(ContentType.JSON)
             .header("Authorization", "Bearer " + token)
             .body(request)
-        .when()
+            .when()
             .post("/api/wishes");
 
         // then
@@ -128,7 +130,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/wishes");
 
         // then
@@ -147,7 +149,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
             .contentType(ContentType.JSON)
             .header("Authorization", "Bearer " + token)
             .body(request)
-        .when()
+            .when()
             .post("/api/wishes");
 
         // then
@@ -170,7 +172,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
             .contentType(ContentType.JSON)
             .header("Authorization", "Bearer " + token)
             .body(request)
-        .when()
+            .when()
             .post("/api/wishes");
 
         // then
@@ -195,7 +197,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
         // when
         var response = given()
             .header("Authorization", "Bearer " + token)
-        .when()
+            .when()
             .delete("/api/wishes/" + wishId);
 
         // then
@@ -212,7 +214,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .delete("/api/wishes/1");
 
         // then
@@ -232,7 +234,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
         // when
         var response = given()
             .header("Authorization", "Bearer " + otherToken)
-        .when()
+            .when()
             .delete("/api/wishes/" + wishId);
 
         // then

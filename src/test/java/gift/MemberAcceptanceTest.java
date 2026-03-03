@@ -7,7 +7,9 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 class MemberAcceptanceTest extends AcceptanceTestFixture {
 
@@ -25,7 +27,7 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/members/register");
 
         // then
@@ -49,7 +51,7 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/members/register");
 
         // then
@@ -69,7 +71,7 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/members/register");
 
         // then
@@ -83,9 +85,9 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         given()
             .contentType(ContentType.JSON)
             .body(Map.of("email", "dup@example.com", "password", "pass1"))
-        .when()
+            .when()
             .post("/api/members/register")
-        .then()
+            .then()
             .statusCode(201);
 
         var request = Map.of(
@@ -97,7 +99,7 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/members/register");
 
         // then
@@ -115,9 +117,9 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         given()
             .contentType(ContentType.JSON)
             .body(Map.of("email", "login@example.com", "password", "mypass"))
-        .when()
+            .when()
             .post("/api/members/register")
-        .then()
+            .then()
             .statusCode(201);
 
         var request = Map.of(
@@ -129,7 +131,7 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/members/login");
 
         // then
@@ -150,7 +152,7 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/members/login");
 
         // then
@@ -164,9 +166,9 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         given()
             .contentType(ContentType.JSON)
             .body(Map.of("email", "wrong@example.com", "password", "correct"))
-        .when()
+            .when()
             .post("/api/members/register")
-        .then()
+            .then()
             .statusCode(201);
 
         var request = Map.of(
@@ -178,7 +180,7 @@ class MemberAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/members/login");
 
         // then

@@ -7,7 +7,11 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
 
 class OptionAcceptanceTest extends AcceptanceTestFixture {
 
@@ -23,7 +27,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .get("/api/products/" + productId + "/options");
 
         // then
@@ -42,7 +46,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .get("/api/products/" + nonExistingId() + "/options");
 
         // then
@@ -63,7 +67,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products/" + productId + "/options");
 
         // then
@@ -87,7 +91,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products/" + productId + "/options");
 
         // then
@@ -106,7 +110,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products/" + productId + "/options");
 
         // then
@@ -123,7 +127,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products/" + nonExistingId() + "/options");
 
         // then
@@ -144,7 +148,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products/" + productId + "/options");
 
         // then
@@ -165,7 +169,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
         var response = given()
             .contentType(ContentType.JSON)
             .body(request)
-        .when()
+            .when()
             .post("/api/products/" + productId + "/options");
 
         // then
@@ -186,7 +190,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .delete("/api/products/" + productId + "/options/" + optionId);
 
         // then
@@ -206,7 +210,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .delete("/api/products/" + productId + "/options/" + optionId);
 
         // then
@@ -227,7 +231,7 @@ class OptionAcceptanceTest extends AcceptanceTestFixture {
 
         // when
         var response = given()
-        .when()
+            .when()
             .delete("/api/products/" + productId + "/options/" + nonExistingId());
 
         // then
