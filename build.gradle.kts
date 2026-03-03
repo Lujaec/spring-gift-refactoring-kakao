@@ -6,6 +6,8 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.flywaydb.flyway") version "12.0.1"
+    checkstyle
+    pmd
 }
 
 group = "camp.nextstep.edu"
@@ -56,6 +58,17 @@ allOpen {
 
 ktlint {
     verbose.set(true)
+}
+
+checkstyle {
+    toolVersion = "10.21.4"
+    configFile = file("config/checkstyle/checkstyle.xml")
+}
+
+pmd {
+    toolVersion = "7.12.0"
+    isConsoleOutput = true
+    ruleSetFiles = files("config/pmd/ruleset.xml")
 }
 
 tasks.withType<Test> {
