@@ -34,7 +34,7 @@ public class OrderController {
         @RequestHeader("Authorization") String authorization,
         Pageable pageable
     ) {
-        // auth check
+        // 인증 확인
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -43,20 +43,20 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-    // order flow:
-    // 1. auth check
-    // 2. validate option
-    // 3. subtract stock
-    // 4. deduct points
-    // 5. save order
-    // 6. cleanup wish
-    // 7. send kakao notification
+    // 주문 흐름:
+    // 1. 인증 확인
+    // 2. 옵션 검증
+    // 3. 재고 차감
+    // 4. 포인트 차감
+    // 5. 주문 저장
+    // 6. 위시리스트 정리
+    // 7. 카카오 알림 전송
     @PostMapping
     public ResponseEntity<?> createOrder(
         @RequestHeader("Authorization") String authorization,
         @Valid @RequestBody OrderRequest request
     ) {
-        // auth check
+        // 인증 확인
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

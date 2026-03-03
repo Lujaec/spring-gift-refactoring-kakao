@@ -37,7 +37,7 @@ public class WishController {
         @RequestHeader("Authorization") String authorization,
         Pageable pageable
     ) {
-        // check auth
+        // 인증 확인
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -51,14 +51,14 @@ public class WishController {
         @RequestHeader("Authorization") String authorization,
         @Valid @RequestBody WishRequest request
     ) {
-        // check auth
+        // 인증 확인
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         try {
-            // check duplicate
+            // 중복 확인
             var existing = wishService.findByMemberIdAndProductId(member.getId(), request.productId());
             if (existing != null) {
                 return ResponseEntity.ok(WishResponse.from(existing));
@@ -77,7 +77,7 @@ public class WishController {
         @RequestHeader("Authorization") String authorization,
         @PathVariable Long id
     ) {
-        // check auth
+        // 인증 확인
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

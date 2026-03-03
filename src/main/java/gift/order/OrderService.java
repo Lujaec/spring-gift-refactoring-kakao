@@ -39,33 +39,33 @@ public class OrderService {
         return orderRepository.findByMemberId(memberId, pageable);
     }
 
-    // order flow:
-    // 1. auth check
-    // 2. validate option
-    // 3. subtract stock
-    // 4. deduct points
-    // 5. save order
-    // 6. cleanup wish
-    // 7. send kakao notification
+    // 주문 흐름:
+    // 1. 인증 확인
+    // 2. 옵션 검증
+    // 3. 재고 차감
+    // 4. 포인트 차감
+    // 5. 주문 저장
+    // 6. 위시리스트 정리
+    // 7. 카카오 알림 전송
     @Transactional
     public Order createOrder(Member member, OrderRequest request) {
-        // validate option
+        // 옵션 검증
         var option = optionRepository.findById(request.optionId())
             .orElseThrow(() -> new NoSuchElementException("옵션이 존재하지 않습니다. optionId=" + request.optionId()));
 
-        // subtract stock
+        // 재고 차감
         option.subtractQuantity(request.quantity());
         optionRepository.save(option);
 
-        // deduct points
+        // 포인트 차감
         var price = option.getProduct().getPrice() * request.quantity();
         member.deductPoint(price);
         memberRepository.save(member);
 
-        // save order
+        // 주문 저장
         var saved = orderRepository.save(new Order(option, member.getId(), request.quantity(), request.message()));
 
-        // best-effort kakao notification
+        // 카카오 알림 전송 (best-effort)
         sendKakaoMessageIfPossible(member, saved, option);
         return saved;
     }
