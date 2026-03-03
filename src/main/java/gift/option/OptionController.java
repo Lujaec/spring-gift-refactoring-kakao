@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
  * Option names are validated against allowed characters and length constraints.
  */
 @RestController
-@RequestMapping(path = "/api/products/{productId}/options")
+@RequestMapping("/api/products/{productId}/options")
 public class OptionController {
     private final OptionService optionService;
 
@@ -56,7 +56,7 @@ public class OptionController {
         }
     }
 
-    @DeleteMapping(path = "/{optionId}")
+    @DeleteMapping("/{optionId}")
     public ResponseEntity<Void> deleteOption(
         @PathVariable Long productId,
         @PathVariable Long optionId
