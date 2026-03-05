@@ -39,36 +39,22 @@ public class OrderService {
         return orderRepository.findByMemberId(memberId, pageable);
     }
 
-    // 주문 흐름:
-    // 1. 인증 확인
-    // 2. 옵션 검증
-    // 3. 재고 차감
-    // 4. 포인트 차감
-    // 5. 주문 저장
-    // 6. 위시리스트 정리
-    // 7. 카카오 알림 전송
     @Transactional
     public Order createOrder(Member member, OrderRequest request) {
-        // 옵션 검증
         var option = optionRepository.findById(request.optionId())
             .orElseThrow(() -> new NoSuchElementException("옵션이 존재하지 않습니다. optionId=" + request.optionId()));
 
-        // 재고 차감
         option.subtractQuantity(request.quantity());
         optionRepository.save(option);
 
-        // 포인트 차감
         var orderAmount = option.getPrice() * request.quantity();
         member.deductPoint(orderAmount);
         memberRepository.save(member);
 
-        // 주문 저장
         var saved = orderRepository.save(new Order(option, member.getId(), request.quantity(), request.message()));
 
-        // 위시리스트 정리
         wishRepository.deleteByMemberIdAndProductId(member.getId(), option.getProduct().getId());
 
-        // 카카오 알림 이벤트 발행 (커밋 후 비동기 처리)
         if (member.getKakaoAccessToken() != null) {
             var product = option.getProduct();
             eventPublisher.publishEvent(new OrderCompletedEvent(
