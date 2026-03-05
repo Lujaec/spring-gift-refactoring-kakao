@@ -116,3 +116,91 @@ public void handle(OrderCompletedEvent event) {
 - `@EnableAsync`와 `TaskExecutor` 설정이 추가로 필요하다.
 - 알림 전송 실패 시 재시도 메커니즘을 직접 구현해야 한다 (현재는 best-effort이므로 당장은 불필요).
 - 비동기 처리로 인해 알림 전송 시점이 주문 응답 이후로 약간 지연된다 (사용자 체감 영향 없음).
+
+# 2. 도메인 응집화
+
+## 맥락
+
+서비스 레이어에 계산·검증·판단 로직이 누수되어 있었다. 도메인 엔티티가 자신의 데이터를 기반으로 수행할 수 있는 행위를 서비스가 대신 처리하고 있어, 변경 이유가 분산되고 응집도가 낮아진 상태였다.
+
+대표적인 누수 사례:
+
+```java
+// OrderService — 가격 계산을 서비스가 직접 수행
+var orderAmount = option.getPrice() * request.quantity();
+
+// MemberService — 비밀번호 검증을 서비스가 직접 수행
+if (member.getPassword() == null || !member.getPassword().equals(password)) { ... }
+
+// WishService — 소유권 검증을 서비스가 직접 수행
+if (!wish.getMemberId().equals(memberId)) { ... }
+```
+
+## 개선 내역
+
+### Option.calculateAmount(int quantity)
+```java
+// Before: OrderService
+var orderAmount = option.getPrice() * request.quantity();
+member.deductPoint(orderAmount);
+
+// After: Option에 메서드 추가
+public int calculateAmount(int quantity) {
+    return getPrice() * quantity;
+}
+// OrderService 호출부
+member.deductPoint(option.calculateAmount(request.quantity()));
+```
+
+### Member.authenticate(String password)
+```java
+// Before: MemberService
+if (member.getPassword() == null || !member.getPassword().equals(password)) {
+    throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
+}
+
+// After: Member에 메서드 추가
+public void authenticate(String password) {
+    if (this.password == null || !this.password.equals(password)) {
+        throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
+    }
+}
+// MemberService 호출부
+member.authenticate(password);
+```
+
+### Wish.validateOwnership(Long memberId)
+```java
+// Before: WishService
+if (!wish.getMemberId().equals(memberId)) {
+    throw new IllegalStateException("본인의 위시만 삭제할 수 있습니다.");
+}
+
+// After: Wish에 메서드 추가
+public void validateOwnership(Long memberId) {
+    if (!this.memberId.equals(memberId)) {
+        throw new IllegalStateException("본인의 위시만 삭제할 수 있습니다.");
+    }
+}
+// WishService 호출부
+wish.validateOwnership(memberId);
+```
+
+## 결정
+
+도메인 엔티티에 행위를 이동하는 방식을 선택했다. 근거:
+
+- **Tell, Don't Ask 원칙**: 객체의 상태를 꺼내서 외부에서 판단하는 대신, 객체에게 행위를 요청한다.
+- **변경 지점 최소화**: 가격 계산 규칙(할인, 세금), 인증 방식(해싱), 소유권 규칙이 변경될 때 도메인 엔티티 한 곳만 수정하면 된다.
+- **점진적 적용**: 기존 동작을 변경하지 않으면서 메서드 추출만으로 달성할 수 있어 리스크가 낮다.
+
+## 결과
+
+### 긍정적 영향
+- 서비스 레이어가 얇아져 비즈니스 흐름(조율)에 집중할 수 있다.
+- 도메인 로직이 엔티티에 응집되어 단위 테스트가 용이하다.
+- 동일한 검증·계산이 필요한 새로운 서비스가 추가되어도 도메인 메서드를 재사용할 수 있다.
+
+### 부정적 영향
+- 엔티티에 메서드가 추가되어 JPA 엔티티가 순수 데이터 객체보다 약간 커진다.
+- 팀 내 "엔티티는 getter만 가진다"는 관행이 있다면 합의가 필요하다.
