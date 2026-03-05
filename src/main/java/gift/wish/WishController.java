@@ -46,15 +46,13 @@ public class WishController {
         @Valid @RequestBody WishRequest request
     ) {
         var member = authenticationResolver.extractMember(authorization);
+        var result = wishService.addWish(member.getId(), request.productId());
+        var body = WishResponse.from(result.wish());
 
-        var existing = wishService.findByMemberIdAndProductId(member.getId(), request.productId());
-        if (existing != null) {
-            return ResponseEntity.ok(WishResponse.from(existing));
+        if (result.created()) {
+            return ResponseEntity.created(URI.create("/api/wishes/" + result.wish().getId())).body(body);
         }
-
-        var saved = wishService.addWish(member.getId(), request.productId());
-        return ResponseEntity.created(URI.create("/api/wishes/" + saved.getId()))
-            .body(WishResponse.from(saved));
+        return ResponseEntity.ok(body);
     }
 
     @DeleteMapping("/{id}")

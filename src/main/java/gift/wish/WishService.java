@@ -8,12 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 public class WishService {
     private final WishRepository wishRepository;
     private final ProductRepository productRepository;
+
+    public record AddWishResult(Wish wish, boolean created) {}
 
     public WishService(WishRepository wishRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
@@ -24,16 +27,17 @@ public class WishService {
         return wishRepository.findByMemberId(memberId, pageable);
     }
 
-    public Wish findByMemberIdAndProductId(Long memberId, Long productId) {
-        return wishRepository.findByMemberIdAndProductId(memberId, productId).orElse(null);
-    }
-
     @Transactional
-    public Wish addWish(Long memberId, Long productId) {
+    public AddWishResult addWish(Long memberId, Long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다. productId=" + productId));
 
-        return wishRepository.save(new Wish(memberId, product));
+        Optional<Wish> existing = wishRepository.findByMemberIdAndProductId(memberId, productId);
+        if (existing.isPresent()) {
+            return new AddWishResult(existing.get(), false);
+        }
+
+        return new AddWishResult(wishRepository.save(new Wish(memberId, product)), true);
     }
 
     @Transactional
