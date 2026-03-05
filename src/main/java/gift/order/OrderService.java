@@ -58,8 +58,8 @@ public class OrderService {
         optionRepository.save(option);
 
         // 포인트 차감
-        var price = option.getProduct().getPrice() * request.quantity();
-        member.deductPoint(price);
+        var orderAmount = option.getPrice() * request.quantity();
+        member.deductPoint(orderAmount);
         memberRepository.save(member);
 
         // 주문 저장
