@@ -65,6 +65,9 @@ public class OrderService {
         // 주문 저장
         var saved = orderRepository.save(new Order(option, member.getId(), request.quantity(), request.message()));
 
+        // 위시리스트 정리
+        wishRepository.deleteByMemberIdAndProductId(member.getId(), option.getProduct().getId());
+
         // 카카오 알림 전송 (best-effort)
         sendKakaoMessageIfPossible(member, saved, option);
         return saved;
