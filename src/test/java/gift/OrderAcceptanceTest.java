@@ -245,7 +245,6 @@ class OrderAcceptanceTest extends AcceptanceTestFixture {
 
 
     @Test
-	@Disabled("트랜잭션 경계가 잘 못 설정되어 실패 - Step2에서 수정 예정")
     void 주문_생성_실패_포인트_부족() {
         // given
         String token = registerAndGetToken("poor@test.com", "pass");
