@@ -93,7 +93,7 @@ class OrderAcceptanceTest extends AcceptanceTestFixture {
 
         // then
         response.then()
-            .statusCode(400);
+            .statusCode(401);
     }
 
     // --- POST /api/orders ---
@@ -152,7 +152,7 @@ class OrderAcceptanceTest extends AcceptanceTestFixture {
 
         // then
         response.then()
-            .statusCode(400);
+            .statusCode(401);
     }
 
     @Test

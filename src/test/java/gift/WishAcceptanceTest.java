@@ -68,7 +68,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
 
         // then
         response.then()
-            .statusCode(400);
+            .statusCode(401);
     }
 
     @Test
@@ -135,7 +135,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
 
         // then
         response.then()
-            .statusCode(400);
+            .statusCode(401);
     }
 
     @Test
@@ -219,7 +219,7 @@ class WishAcceptanceTest extends AcceptanceTestFixture {
 
         // then
         response.then()
-            .statusCode(400);
+            .statusCode(401);
     }
 
     @Test
