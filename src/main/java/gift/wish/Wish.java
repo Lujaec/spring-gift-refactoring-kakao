@@ -1,5 +1,6 @@
 package gift.wish;
 
+import gift.common.ForbiddenException;
 import gift.product.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class Wish {
 
     public void validateOwnership(Long memberId) {
         if (!this.memberId.equals(memberId)) {
-            throw new IllegalStateException("본인의 위시만 삭제할 수 있습니다.");
+            throw new ForbiddenException("본인의 위시만 삭제할 수 있습니다.");
         }
     }
 
